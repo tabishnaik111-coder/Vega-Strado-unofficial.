@@ -1,0 +1,944 @@
+/* =========================================================
+   VEGA STRADO — GLOBAL DESIGN SYSTEM
+   PART 2
+   ========================================================= */
+
+:root {
+  /* -------------------------------------------------------
+     BRAND COLORS
+     ------------------------------------------------------- */
+
+  --vega-ink: #1C1B22;
+  --vega-cream: #FFF6EA;
+  --vega-coral: rgb(129, 97, 242);
+  --vega-sun: #a08ff4ad;
+
+  /* -------------------------------------------------------
+     PASTEL SURFACES
+     ------------------------------------------------------- */
+
+  --vega-mint: #CFF5E7;
+  --vega-lilac: #DED4FF;
+  --vega-blue: #CDEBFF;
+  --vega-peach: #FFE0D5;
+  --vega-pink: #FFD5E5;
+  --vega-yellow: #FFF0B8;
+
+  /* -------------------------------------------------------
+     BASIC COLORS
+     ------------------------------------------------------- */
+
+  --vega-white: #FFFFFF;
+  --vega-black: #000000;
+
+  /* -------------------------------------------------------
+     TEXT COLORS
+     ------------------------------------------------------- */
+
+  --vega-text-primary: var(--vega-ink);
+  --vega-text-secondary: #696771;
+  --vega-text-muted: #96939C;
+  --vega-text-light: #FFFFFF;
+
+  /* -------------------------------------------------------
+     BORDERS
+     ------------------------------------------------------- */
+
+  --vega-border: rgba(28, 27, 34, 0.12);
+  --vega-border-strong: rgba(28, 27, 34, 0.22);
+  --vega-border-light: rgba(255, 255, 255, 0.2);
+
+  /* -------------------------------------------------------
+     RADIUS
+     ------------------------------------------------------- */
+
+  --vega-radius-xs: 8px;
+  --vega-radius-sm: 12px;
+  --vega-radius-md: 18px;
+  --vega-radius-lg: 28px;
+  --vega-radius-xl: 40px;
+  --vega-radius-pill: 999px;
+
+  /* -------------------------------------------------------
+     SPACING
+     ------------------------------------------------------- */
+
+  --vega-space-1: 4px;
+  --vega-space-2: 8px;
+  --vega-space-3: 12px;
+  --vega-space-4: 16px;
+  --vega-space-5: 20px;
+  --vega-space-6: 24px;
+  --vega-space-7: 32px;
+  --vega-space-8: 40px;
+  --vega-space-9: 48px;
+  --vega-space-10: 64px;
+  --vega-space-11: 80px;
+  --vega-space-12: 96px;
+  --vega-space-13: 120px;
+
+  /* -------------------------------------------------------
+     LAYOUT
+     ------------------------------------------------------- */
+
+  --vega-container: 1280px;
+  --vega-container-wide: 1440px;
+  --vega-page-padding: 20px;
+
+  /* -------------------------------------------------------
+     TYPOGRAPHY
+     ------------------------------------------------------- */
+
+  --vega-font-display:
+    "Sora",
+    "Poppins",
+    system-ui,
+    sans-serif;
+
+  --vega-font-body:
+    Inter,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+
+  /* -------------------------------------------------------
+     FONT SIZES
+     ------------------------------------------------------- */
+
+  --vega-text-xs: 0.75rem;
+  --vega-text-sm: 0.875rem;
+  --vega-text-md: 1rem;
+  --vega-text-lg: 1.125rem;
+  --vega-text-xl: 1.25rem;
+  --vega-text-2xl: 1.5rem;
+  --vega-text-3xl: 2rem;
+  --vega-text-4xl: 2.5rem;
+  --vega-text-5xl: 3rem;
+  --vega-text-6xl: 4rem;
+
+  /* -------------------------------------------------------
+     SHADOWS
+     ------------------------------------------------------- */
+
+  --vega-shadow-sm:
+    0 4px 14px rgba(28, 27, 34, 0.08);
+
+  --vega-shadow-md:
+    0 12px 30px rgba(28, 27, 34, 0.1);
+
+  --vega-shadow-lg:
+    0 24px 60px rgba(28, 27, 34, 0.14);
+
+  /* -------------------------------------------------------
+     TRANSITIONS
+     ------------------------------------------------------- */
+
+  --vega-transition-fast:
+    180ms ease;
+
+  --vega-transition:
+    280ms ease;
+
+  --vega-transition-slow:
+    450ms ease;
+
+  /* -------------------------------------------------------
+     Z-INDEX
+     ------------------------------------------------------- */
+
+  --vega-z-base: 1;
+  --vega-z-header: 100;
+  --vega-z-dropdown: 200;
+  --vega-z-overlay: 500;
+  --vega-z-modal: 600;
+  --vega-z-cursor: 1000;
+}
+
+
+/* =========================================================
+   RESET
+   ========================================================= */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  margin: 0;
+  padding: 0;
+  background: var(--vega-cream);
+  color: var(--vega-ink);
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+
+  background: var(--vega-cream);
+  color: var(--vega-text-primary);
+
+  font-family: var(--vega-font-body);
+  font-size: var(--vega-text-md);
+  line-height: 1.5;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  text-rendering: optimizeLegibility;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  border: 0;
+}
+
+img,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+}
+
+img {
+  height: auto;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin: 0;
+}
+
+
+/* =========================================================
+   TYPOGRAPHY
+   ========================================================= */
+
+.vega-display {
+  font-family: var(--vega-font-display);
+  font-weight: 700;
+  letter-spacing: -0.045em;
+  line-height: 1.05;
+}
+
+.vega-heading-xl {
+  font-family: var(--vega-font-display);
+  font-size: clamp(3rem, 9vw, 7rem);
+  font-weight: 700;
+  letter-spacing: -0.06em;
+  line-height: 0.95;
+}
+
+.vega-heading-lg {
+  font-family: var(--vega-font-display);
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  font-weight: 700;
+  letter-spacing: -0.055em;
+  line-height: 0.98;
+}
+
+.vega-heading-md {
+  font-family: var(--vega-font-display);
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: 700;
+  letter-spacing: -0.045em;
+  line-height: 1;
+}
+
+.vega-heading-sm {
+  font-family: var(--vega-font-display);
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 1.05;
+}
+
+.vega-text-lg {
+  font-size: var(--vega-text-lg);
+  line-height: 1.7;
+}
+
+.vega-text {
+  font-size: var(--vega-text-md);
+  line-height: 1.6;
+}
+
+.vega-text-sm {
+  font-size: var(--vega-text-sm);
+  line-height: 1.5;
+}
+
+.vega-text-muted {
+  color: var(--vega-text-muted);
+}
+
+.vega-text-secondary {
+  color: var(--vega-text-secondary);
+}
+
+
+/* =========================================================
+   LAYOUT
+   ========================================================= */
+
+.vega-container {
+  width: min(
+    calc(100% - (var(--vega-page-padding) * 2)),
+    var(--vega-container)
+  );
+
+  margin-inline: auto;
+}
+
+.vega-container-wide {
+  width: min(
+    calc(100% - (var(--vega-page-padding) * 2)),
+    var(--vega-container-wide)
+  );
+
+  margin-inline: auto;
+}
+
+.vega-section {
+  position: relative;
+  padding-block: var(--vega-space-12);
+}
+
+.vega-section-sm {
+  position: relative;
+  padding-block: var(--vega-space-9);
+}
+
+.vega-section-lg {
+  position: relative;
+  padding-block: var(--vega-space-13);
+}
+
+
+/* =========================================================
+   FLEX UTILITIES
+   ========================================================= */
+
+.vega-flex {
+  display: flex;
+}
+
+.vega-flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.vega-flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.vega-flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.vega-flex-wrap {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.vega-gap-1 {
+  gap: var(--vega-space-1);
+}
+
+.vega-gap-2 {
+  gap: var(--vega-space-2);
+}
+
+.vega-gap-3 {
+  gap: var(--vega-space-3);
+}
+
+.vega-gap-4 {
+  gap: var(--vega-space-4);
+}
+
+.vega-gap-5 {
+  gap: var(--vega-space-5);
+}
+
+.vega-gap-6 {
+  gap: var(--vega-space-6);
+}
+
+.vega-gap-7 {
+  gap: var(--vega-space-7);
+}
+
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
+
+.vega-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 48px;
+  padding: 0 22px;
+
+  border: 1.5px solid transparent;
+  border-radius: var(--vega-radius-pill);
+
+  font-family: var(--vega-font-body);
+  font-size: var(--vega-text-sm);
+  font-weight: 700;
+
+  white-space: nowrap;
+
+  transition:
+    transform var(--vega-transition-fast),
+    background-color var(--vega-transition-fast),
+    color var(--vega-transition-fast),
+    border-color var(--vega-transition-fast);
+}
+
+.vega-button:hover {
+  transform: translateY(-2px);
+}
+
+.vega-button:active {
+  transform: translateY(0);
+}
+
+.vega-button:focus-visible {
+  outline: 3px solid var(--vega-coral);
+  outline-offset: 3px;
+}
+
+.vega-button-primary {
+  background: var(--vega-ink);
+  color: var(--vega-white);
+}
+
+.vega-button-primary:hover {
+  background: var(--vega-coral);
+}
+
+.vega-button-coral {
+  background: var(--vega-coral);
+  color: var(--vega-white);
+}
+
+.vega-button-coral:hover {
+  background: var(--vega-ink);
+}
+
+.vega-button-sun {
+  background: var(--vega-sun);
+  color: var(--vega-ink);
+}
+
+.vega-button-outline {
+  border-color: var(--vega-border-strong);
+  background: transparent;
+  color: var(--vega-ink);
+}
+
+.vega-button-outline:hover {
+  border-color: var(--vega-ink);
+  background: var(--vega-ink);
+  color: var(--vega-white);
+}
+
+.vega-button-ghost {
+  background: transparent;
+  color: var(--vega-ink);
+}
+
+.vega-button-ghost:hover {
+  background: rgba(28, 27, 34, 0.06);
+}
+
+.vega-button-sm {
+  min-height: 40px;
+  padding-inline: 16px;
+  font-size: var(--vega-text-xs);
+}
+
+.vega-button-lg {
+  min-height: 56px;
+  padding-inline: 28px;
+  font-size: var(--vega-text-md);
+}
+
+
+/* =========================================================
+   CARDS
+   ========================================================= */
+
+.vega-card {
+  position: relative;
+
+  border: 1px solid var(--vega-border);
+  border-radius: var(--vega-radius-lg);
+
+  background: var(--vega-white);
+
+  overflow: hidden;
+}
+
+.vega-card-mint {
+  background: var(--vega-mint);
+}
+
+.vega-card-lilac {
+  background: var(--vega-lilac);
+}
+
+.vega-card-blue {
+  background: var(--vega-blue);
+}
+
+.vega-card-peach {
+  background: var(--vega-peach);
+}
+
+.vega-card-pink {
+  background: var(--vega-pink);
+}
+
+.vega-card-yellow {
+  background: var(--vega-yellow);
+}
+
+.vega-card-padding {
+  padding: var(--vega-space-7);
+}
+
+
+/* =========================================================
+   INPUTS
+   ========================================================= */
+
+.vega-input,
+.vega-select,
+.vega-textarea {
+  width: 100%;
+
+  border: 1.5px solid var(--vega-border-strong);
+  border-radius: var(--vega-radius-sm);
+
+  background: var(--vega-white);
+  color: var(--vega-ink);
+
+  outline: none;
+
+  transition:
+    border-color var(--vega-transition-fast),
+    box-shadow var(--vega-transition-fast);
+}
+
+.vega-input,
+.vega-select {
+  min-height: 50px;
+  padding: 0 16px;
+}
+
+.vega-textarea {
+  min-height: 140px;
+  padding: 14px 16px;
+  resize: vertical;
+}
+
+.vega-input::placeholder,
+.vega-textarea::placeholder {
+  color: var(--vega-text-muted);
+}
+
+.vega-input:focus,
+.vega-select:focus,
+.vega-textarea:focus {
+  border-color: var(--vega-coral);
+  box-shadow: 0 0 0 3px rgba(255, 107, 74, 0.12);
+}
+
+.vega-input:focus-visible,
+.vega-select:focus-visible,
+.vega-textarea:focus-visible {
+  outline: none;
+}
+
+
+/* =========================================================
+   LABELS
+   ========================================================= */
+
+.vega-label {
+  display: block;
+  margin-bottom: 8px;
+
+  color: var(--vega-ink);
+
+  font-size: var(--vega-text-sm);
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   BADGES
+   ========================================================= */
+
+.vega-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 28px;
+  padding: 0 11px;
+
+  border-radius: var(--vega-radius-pill);
+
+  font-size: var(--vega-text-xs);
+  font-weight: 800;
+  line-height: 1;
+}
+
+.vega-badge-coral {
+  background: var(--vega-coral);
+  color: var(--vega-white);
+}
+
+.vega-badge-sun {
+  background: var(--vega-sun);
+  color: var(--vega-ink);
+}
+
+.vega-badge-mint {
+  background: var(--vega-mint);
+  color: var(--vega-ink);
+}
+
+.vega-badge-dark {
+  background: var(--vega-ink);
+  color: var(--vega-white);
+}
+
+
+/* =========================================================
+   DIVIDERS
+   ========================================================= */
+
+.vega-divider {
+  width: 100%;
+  height: 1px;
+  background: var(--vega-border);
+}
+
+
+/* =========================================================
+   VISUAL HELPERS
+   ========================================================= */
+
+.vega-hidden {
+  display: none !important;
+}
+
+.vega-relative {
+  position: relative;
+}
+
+.vega-overflow-hidden {
+  overflow: hidden;
+}
+
+.vega-rounded {
+  border-radius: var(--vega-radius-lg);
+}
+
+.vega-pill {
+  border-radius: var(--vega-radius-pill);
+}
+
+.vega-center {
+  text-align: center;
+}
+
+.vega-uppercase {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.vega-no-select {
+  user-select: none;
+}
+
+
+/* =========================================================
+   ACCESSIBILITY
+   ========================================================= */
+
+.vega-sr-only {
+  position: absolute;
+
+  width: 1px;
+  height: 1px;
+
+  padding: 0;
+  margin: -1px;
+
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+
+  white-space: nowrap;
+  border: 0;
+}
+
+:focus-visible {
+  outline: 3px solid var(--vega-coral);
+  outline-offset: 3px;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (min-width: 640px) {
+  :root {
+    --vega-page-padding: 28px;
+  }
+}
+
+@media (min-width: 768px) {
+  :root {
+    --vega-page-padding: 32px;
+  }
+
+  .vega-section {
+    padding-block: var(--vega-space-13);
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --vega-page-padding: 40px;
+  }
+}
+
+@media (min-width: 1440px) {
+  :root {
+    --vega-page-padding: 48px;
+  }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .vega-button:hover {
+    transform: none;
+  }
+}
+
+/* =========================================================
+   APP SHELL
+   PART 3
+   ========================================================= */
+
+.vega-site {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.vega-main {
+  flex: 1;
+  width: 100%;
+}
+
+.vega-header {
+  position: relative;
+  z-index: var(--vega-z-header);
+  width: 100%;
+  background: var(--vega-cream);
+}
+
+.vega-header-inner {
+  min-height: 76px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.vega-logo,
+.vega-footer-logo {
+  font-family: var(--vega-font-display);
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+}
+
+.vega-header-placeholder {
+  color: var(--vega-text-secondary);
+  font-size: var(--vega-text-sm);
+}
+
+.vega-footer {
+  width: 100%;
+  padding-block: var(--vega-space-8);
+
+  background: var(--vega-ink);
+  color: var(--vega-white);
+}
+
+.vega-footer-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--vega-space-6);
+}
+
+.vega-footer-logo {
+  margin-bottom: var(--vega-space-2);
+}
+
+@media (max-width: 640px) {
+  .vega-header-inner {
+    min-height: 68px;
+  }
+
+  .vega-footer-inner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* =========================================================
+   PAGE HEADINGS
+   PART 3
+   ========================================================= */
+
+.vega-page-heading {
+  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--vega-space-5);
+}
+
+.vega-home-intro {
+  max-width: 900px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  gap: var(--vega-space-6);
+}
+
+.vega-home-intro .vega-text-lg {
+  max-width: 620px;
+}
+
+/* ========================================
+   PART 4 — LENIS SMOOTH SCROLL
+======================================== */
+
+html {
+  scroll-behavior: auto;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+/* ========================================
+   PART 5 — PAGE TRANSITIONS
+======================================== */
+
+.vega-page-transition {
+  position: relative;
+  min-height: 100%;
+  overflow: hidden;
+}
+
+.vega-page-transition__content {
+  position: relative;
+  z-index: 1;
+  min-height: 100%;
+}
+
+.vega-page-transition__wipe {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  background: var(--vega-coral);
+  transform-origin: top;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vega-page-transition__content {
+    animation: none;
+  }
+
+  .vega-page-transition__wipe {
+    display: none;
+  }
+}
+

@@ -12,6 +12,7 @@ import connectDB from "./config/db.js";
 import paymentRoutes from "./routes/paymentRoutes.js";
 import printifyWebhookRoutes from "./routes/printifyWebhookRoutes.js";
 import validateEnvironment from "./config/env.js";
+import reviewRoutes from "./routes/reviewRoutes.js";
 
 
 const app = express();
@@ -109,6 +110,7 @@ app.use(
   "/api/webhooks/printify",
   printifyWebhookRoutes
 );
+app.use("/api/reviews", reviewRoutes);
 
 
 app.get("/api/health", (req, res) => {

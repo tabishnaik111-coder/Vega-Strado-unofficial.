@@ -160,6 +160,56 @@ export async function sendOrderToPrintifyProduction(
   return data;
 }
 
+export async function getProductReviews(
+  productId
+) {
+  const response = await fetch(
+    `${API_URL}/reviews/${productId}`
+  );
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(
+      data.message ||
+        "Unable to load product reviews."
+    );
+  }
+
+  return data;
+}
+
+export async function submitProductReview(
+  reviewData
+) {
+  const response = await fetch(
+    `${API_URL}/reviews`,
+    {
+      method: "POST",
+
+      headers: {
+        "Content-Type": "application/json",
+      },
+
+      credentials: "include",
+
+      body: JSON.stringify(reviewData),
+    }
+  );
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(
+      data.message ||
+        "Unable to submit review."
+    );
+  }
+
+  return data;
+}
+
+
 export {
   getProducts,
   getProductById,

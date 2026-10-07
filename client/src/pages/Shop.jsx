@@ -406,6 +406,10 @@ function Shop() {
                         price: product.price,
                         category: product.category,
                         color: getCardColor(product),
+                        image:
+                          product.image ||
+                          product.images?.[0] ||
+                          "",
                       }}
                     />
                   </motion.div>

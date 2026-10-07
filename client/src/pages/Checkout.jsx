@@ -1,8 +1,11 @@
 import { useState } from "react";
+
 import { motion } from "framer-motion";
-import { Link, Navigate } from "react-router-dom";
+
+import { Link } from "react-router-dom";
 
 import { useCart } from "../context/CartContext";
+
 import {
   createOrder,
   createRazorpayOrder,
@@ -13,9 +16,6 @@ import {
 
 function Checkout() {
   const { cart, cartSubtotal } = useCart();
-
-  const [paymentMethod, setPaymentMethod] =
-    useState("razorpay");
 
   const [customer, setCustomer] = useState({
     firstName: "",
@@ -28,10 +28,10 @@ function Checkout() {
     postalCode: "",
   });
 
-  const [isSubmitting, setIsSubmitting] =
-    useState(false);
-
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState("");
+  const [checkoutStep, setCheckoutStep] = useState("details");
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -42,35 +42,21 @@ function Checkout() {
     }));
   };
 
-  const openRazorpayCheckout = async (
-    orderNumber
-  ) => {
+  const openRazorpayCheckout = async (orderNumber) => {
     try {
-      const paymentData =
-        await createRazorpayOrder(orderNumber);
+      const paymentData = await createRazorpayOrder(orderNumber);
 
       if (!window.Razorpay) {
-        throw new Error(
-          "Razorpay Checkout failed to load."
-        );
+        throw new Error("Razorpay Checkout failed to load.");
       }
 
       const options = {
         key: paymentData.keyId,
-
-        amount:
-          paymentData.razorpayOrder.amount,
-
-        currency:
-          paymentData.razorpayOrder.currency,
-
+        amount: paymentData.razorpayOrder.amount,
+        currency: paymentData.razorpayOrder.currency,
         name: "Vega Strado",
-
-        description:
-          "Vega Strado clothing order",
-
-        order_id:
-          paymentData.razorpayOrder.id,
+        description: "Vega Strado clothing order",
+        order_id: paymentData.razorpayOrder.id,
 
         prefill: {
           name: `${customer.firstName} ${customer.lastName}`,
@@ -87,48 +73,40 @@ function Checkout() {
             setIsSubmitting(true);
             setError("");
 
-            const result =
-  await verifyRazorpayPayment({
-    orderNumber,
+            const result = await verifyRazorpayPayment({
+              orderNumber,
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+            });
 
-    razorpay_order_id:
-      response.razorpay_order_id,
+            console.log(
+              "Online order completed:",
+              result.order
+            );
 
-    razorpay_payment_id:
-      response.razorpay_payment_id,
+            const printifyResult = await createPrintifyOrder(
+              result.order.orderNumber
+            );
 
-    razorpay_signature:
-      response.razorpay_signature,
-  });
+            console.log(
+              "Printify order created:",
+              printifyResult
+            );
 
-console.log(
-  "Online order completed:",
-  result.order
-);
+            const productionResult =
+              await sendOrderToPrintifyProduction(
+                result.order.orderNumber
+              );
 
-const printifyResult =
-  await createPrintifyOrder(
-    result.order.orderNumber
-  );
+            console.log(
+              "Printify production started:",
+              productionResult
+            );
 
-console.log(
-  "Printify order created:",
-  printifyResult
-);
-
-const productionResult =
-  await sendOrderToPrintifyProduction(
-    result.order.orderNumber
-  );
-
-console.log(
-  "Printify production started:",
-  productionResult
-);
-
-alert(
-  `Payment successful!\nOrder: ${result.order.orderNumber}`
-);
+            alert(
+              `Payment successful!\nOrder: ${result.order.orderNumber}`
+            );
           } catch (error) {
             console.error(
               "Payment verification failed:",
@@ -146,17 +124,13 @@ alert(
 
         modal: {
           ondismiss: function () {
-            console.log(
-              "Razorpay checkout closed."
-            );
-
+            console.log("Razorpay checkout closed.");
             setIsSubmitting(false);
           },
         },
       };
 
-      const razorpay =
-        new window.Razorpay(options);
+      const razorpay = new window.Razorpay(options);
 
       razorpay.open();
     } catch (error) {
@@ -173,96 +147,153 @@ alert(
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
     setError("");
-    setIsSubmitting(true);
+
+    if (cart.length === 0) {
+      setError("Your cart is empty.");
+      return;
+    }
+
+    const fullName =
+      `${customer.firstName} ${customer.lastName}`.trim();
+
+    if (!fullName) {
+      setError("Please enter your full name.");
+      return;
+    }
+
+    if (!customer.email.trim()) {
+      setError("Please enter your email address.");
+      return;
+    }
+
+    if (
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
+        customer.email.trim()
+      )
+    ) {
+      setError("Please enter a valid email address.");
+      return;
+    }
+
+    if (!customer.phone.trim()) {
+      setError("Please enter your phone number.");
+      return;
+    }
+
+    if (
+      !/^[6-9]\d{9}$/.test(
+        customer.phone.replace(/\s+/g, "")
+      )
+    ) {
+      setError(
+        "Please enter a valid 10-digit Indian mobile number."
+      );
+      return;
+    }
+
+    if (!customer.address.trim()) {
+      setError("Please enter your delivery address.");
+      return;
+    }
+
+    if (!customer.city.trim()) {
+      setError("Please enter your city.");
+      return;
+    }
+
+    if (!customer.state.trim()) {
+      setError("Please enter your state.");
+      return;
+    }
+
+    if (!customer.postalCode.trim()) {
+      setError("Please enter your PIN code.");
+      return;
+    }
+
+    if (!/^\d{6}$/.test(customer.postalCode.trim())) {
+      setError("Please enter a valid 6-digit PIN code.");
+      return;
+    }
+
+    if (!paymentMethod) {
+      setError("Please select a payment method.");
+      return;
+    }
 
     try {
-      const result = await createOrder({
-        customer,
+      setIsSubmitting(true);
 
-        items: cart,
+      const orderData = {
+        customer: {
+          name: fullName,
+          email: customer.email.trim(),
+          phone: customer.phone.replace(/\s+/g, ""),
+        },
 
-        subtotal: cartSubtotal,
+        shippingAddress: {
+          address: customer.address.trim(),
+          city: customer.city.trim(),
+          state: customer.state.trim(),
+          pincode: customer.postalCode.trim(),
+          country: "India",
+        },
 
-        total: cartSubtotal,
+        items: cart.map((item) => ({
+          productId: item.productId || item.id,
+          title: item.title || item.name,
+          quantity: item.quantity,
+          price: item.price,
+          size: item.size,
+          color: item.color,
+          image:
+            item.image ||
+            item.images?.[0] ||
+            item.product?.image ||
+            item.product?.images?.[0] ||
+            "",
+        })),
 
         paymentMethod,
-      });
+        amount: cartSubtotal,
+      };
 
-      console.log(
-        "Order initialized:",
-        result.order
-      );
+      const order = await createOrder(orderData);
 
-      if (
-  paymentMethod === "cod" &&
-  result.order.paymentStatus !==
-    "cod_pending"
-) {
-  throw new Error(
-    "COD order was not initialized correctly."
-  );
-}
+      const orderNumber =
+        order.orderNumber || order.id;
 
-      // RAZORPAY
-      if (paymentMethod === "razorpay") {
-        await openRazorpayCheckout(
-          result.order.orderNumber
+      if (!orderNumber) {
+        throw new Error(
+          "Order number was not generated."
         );
+      }
+
+      if (paymentMethod === "online") {
+        setCheckoutStep("payment");
+
+        await openRazorpayCheckout(orderNumber);
 
         return;
       }
 
-      // CASH ON DELIVERY
       if (paymentMethod === "cod") {
-  console.log(
-    "COD order created:",
-    result.order
-  );
+        setCheckoutStep("confirmation");
 
-  const printifyResult =
-    await createPrintifyOrder(
-      result.order.orderNumber
-    );
-
-  console.log(
-    "Printify order created:",
-    printifyResult
-  );
-
-  const productionResult =
-  await sendOrderToPrintifyProduction(
-    result.order.orderNumber
-  );
-
-console.log(
-  "Printify production started:",
-  productionResult
-);
-
-  alert(
-    `Order placed successfully!\nOrder: ${result.order.orderNumber}`
-  );
-
-  return;
-}
-
-    } catch (error) {
-      console.error(error);
+        return;
+      }
+    } catch (err) {
+      console.error("Checkout error:", err);
 
       setError(
-        error.message ||
-          "Something went wrong. Please try again."
+        err.message ||
+          "Unable to continue with checkout."
       );
-
+    } finally {
       setIsSubmitting(false);
     }
   };
-
-  if (cart.length === 0) {
-    return <Navigate to="/cart" replace />;
-  }
 
   return (
     <div className="vega-checkout-page">
@@ -310,6 +341,38 @@ console.log(
 
       <section className="vega-checkout-page__content">
         <div className="vega-container">
+          <div className="vega-checkout-progress">
+            <span
+              className={
+                checkoutStep === "details"
+                  ? "active"
+                  : ""
+              }
+            >
+              01 DETAILS
+            </span>
+
+            <span
+              className={
+                checkoutStep === "payment"
+                  ? "active"
+                  : ""
+              }
+            >
+              02 PAYMENT
+            </span>
+
+            <span
+              className={
+                checkoutStep === "confirmation"
+                  ? "active"
+                  : ""
+              }
+            >
+              03 CONFIRMATION
+            </span>
+          </div>
+
           <motion.form
             className="vega-checkout-page__layout"
             onSubmit={handleSubmit}
@@ -318,17 +381,14 @@ console.log(
               customer={customer}
               handleChange={handleChange}
               paymentMethod={paymentMethod}
-              setPaymentMethod={
-                setPaymentMethod
-              }
+              setPaymentMethod={setPaymentMethod}
+              isSubmitting={isSubmitting}
             />
 
             <CheckoutSummary
               cart={cart}
               subtotal={cartSubtotal}
-              isSubmitting={isSubmitting}
               error={error}
-              paymentMethod={paymentMethod}
             />
           </motion.form>
         </div>
@@ -342,6 +402,7 @@ function CheckoutForm({
   handleChange,
   paymentMethod,
   setPaymentMethod,
+  isSubmitting,
 }) {
   return (
     <motion.div
@@ -494,16 +555,13 @@ function CheckoutForm({
 
         <h2>PAYMENT METHOD.</h2>
 
-        <div className="vega-checkout-form__payment-options">
-          <label className="vega-checkout-form__payment-option">
+        <div className="vega-checkout-payment-options">
+          <label className="vega-checkout-payment-option">
             <input
               type="radio"
               name="paymentMethod"
-              value="razorpay"
-              checked={
-                paymentMethod ===
-                "razorpay"
-              }
+              value="online"
+              checked={paymentMethod === "online"}
               onChange={(event) =>
                 setPaymentMethod(
                   event.target.value
@@ -511,30 +569,23 @@ function CheckoutForm({
               }
             />
 
-            <div>
-              <strong>
-                SECURE ONLINE PAYMENT
-              </strong>
+            <span className="vega-checkout-payment-option__radio" />
 
-              <p>
-                Pay securely using
-                Razorpay.
-              </p>
-            </div>
+            <span className="vega-checkout-payment-option__content">
+              <strong>ONLINE PAYMENT</strong>
 
-            <span className="vega-checkout-form__payment-badge">
-              ONLINE
+              <small>
+                Pay securely online.
+              </small>
             </span>
           </label>
 
-          <label className="vega-checkout-form__payment-option">
+          <label className="vega-checkout-payment-option">
             <input
               type="radio"
               name="paymentMethod"
               value="cod"
-              checked={
-                paymentMethod === "cod"
-              }
+              checked={paymentMethod === "cod"}
               onChange={(event) =>
                 setPaymentMethod(
                   event.target.value
@@ -542,22 +593,44 @@ function CheckoutForm({
               }
             />
 
-            <div>
-              <strong>
-                CASH ON DELIVERY
-              </strong>
+            <span className="vega-checkout-payment-option__radio" />
 
-              <p>
-                Pay when your order
-                is delivered.
-              </p>
-            </div>
+            <span className="vega-checkout-payment-option__content">
+              <strong>CASH ON DELIVERY</strong>
 
-            <span className="vega-checkout-form__payment-badge">
-              COD
+              <small>
+                Pay when your order arrives.
+              </small>
             </span>
           </label>
         </div>
+
+        {paymentMethod && (
+          <motion.button
+            type="submit"
+            className="vega-checkout-payment-continue"
+            disabled={isSubmitting}
+            initial={{
+              opacity: 0,
+              y: 10,
+            }}
+            animate={{
+              opacity: 1,
+              y: 0,
+            }}
+            transition={{
+              duration: 0.25,
+            }}
+          >
+            {isSubmitting
+              ? "PROCESSING..."
+              : paymentMethod === "online"
+              ? "CONTINUE TO ONLINE PAYMENT"
+              : "CONTINUE WITH COD"}
+
+            <span>→</span>
+          </motion.button>
+        )}
       </div>
     </motion.div>
   );
@@ -566,9 +639,7 @@ function CheckoutForm({
 function CheckoutSummary({
   cart,
   subtotal,
-  isSubmitting,
   error,
-  paymentMethod,
 }) {
   return (
     <motion.aside
@@ -595,58 +666,70 @@ function CheckoutSummary({
       </div>
 
       <div className="vega-checkout-summary__items">
-        {cart.map((item) => (
-          <div
-            className="vega-checkout-summary__item"
-            key={item.id}
-          >
-            <div className="vega-checkout-summary__image">
-              {item.image ? (
-                <img
-                  src={item.image}
-                  alt={item.name}
-                />
-              ) : (
-                <span>V</span>
-              )}
+        {cart.map((item) => {
+          const productImage =
+            item.image ||
+            item.images?.[0] ||
+            item.product?.image ||
+            item.product?.images?.[0] ||
+            "";
 
-              <span>
-                {item.quantity}
-              </span>
-            </div>
+          return (
+            <div
+              className="vega-checkout-summary__item"
+              key={item.id}
+            >
+              <div className="vega-checkout-summary__image">
+                {productImage ? (
+                  <img
+                    src={productImage}
+                    alt={
+                      item.name ||
+                      item.title ||
+                      "Vega Strado product"
+                    }
+                    loading="lazy"
+                  />
+                ) : (
+                  <span>V</span>
+                )}
 
-            <div className="vega-checkout-summary__details">
+                <span>
+                  {item.quantity}
+                </span>
+              </div>
+
+              <div className="vega-checkout-summary__details">
+                <strong>
+                  {item.name || item.title}
+                </strong>
+
+                {(item.size ||
+                  item.color) && (
+                  <small>
+                    {item.size &&
+                      `Size: ${item.size}`}
+
+                    {item.size &&
+                      item.color &&
+                      " · "}
+
+                    {item.color &&
+                      `Color: ${item.color}`}
+                  </small>
+                )}
+              </div>
+
               <strong>
-                {item.name}
+                ₹
+                {(
+                  item.price *
+                  item.quantity
+                ).toLocaleString("en-IN")}
               </strong>
-
-              {(item.size ||
-                item.color) && (
-                <small>
-                  {item.size &&
-                    `Size: ${item.size}`}
-
-                  {item.size &&
-                    item.color &&
-                    " · "}
-
-                  {item.color &&
-                    `Color: ${item.color}`}
-                </small>
-              )}
             </div>
-
-            <strong>
-              ₹
-              {(
-                item.price *
-                item.quantity
-              ).toLocaleString(
-                "en-IN"
-              )}
-            </strong>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       <div className="vega-checkout-summary__divider" />
@@ -656,9 +739,7 @@ function CheckoutSummary({
 
         <strong>
           ₹
-          {subtotal.toLocaleString(
-            "en-IN"
-          )}
+          {subtotal.toLocaleString("en-IN")}
         </strong>
       </div>
 
@@ -673,9 +754,7 @@ function CheckoutSummary({
 
         <strong>
           ₹
-          {subtotal.toLocaleString(
-            "en-IN"
-          )}
+          {subtotal.toLocaleString("en-IN")}
         </strong>
       </div>
 
@@ -684,23 +763,6 @@ function CheckoutSummary({
           {error}
         </div>
       )}
-
-      <button
-        type="submit"
-        className="vega-checkout-summary__button"
-        disabled={isSubmitting}
-      >
-        {isSubmitting
-          ? "PROCESSING..."
-          : paymentMethod ===
-            "cod"
-          ? "PLACE COD ORDER"
-          : "CONTINUE TO PAYMENT"}
-
-        <span>
-          {isSubmitting ? "…" : "↗"}
-        </span>
-      </button>
 
       <Link
         to="/cart"

@@ -136,6 +136,13 @@ function CartPageItem({
   onQuantityChange,
   onRemove,
 }) {
+  const productImage =
+    item.image ||
+    item.images?.[0] ||
+    item.product?.image ||
+    item.product?.images?.[0] ||
+    "";
+
   return (
     <motion.article
       className="vega-cart-page-item"
@@ -158,10 +165,11 @@ function CartPageItem({
       }}
     >
       <div className="vega-cart-page-item__image">
-        {item.image ? (
+        {productImage ? (
           <img
-            src={item.image}
+            src={productImage}
             alt={item.name}
+            loading="lazy"
           />
         ) : (
           <span>V</span>

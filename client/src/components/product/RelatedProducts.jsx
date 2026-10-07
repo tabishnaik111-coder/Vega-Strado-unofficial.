@@ -136,6 +136,10 @@ function RelatedProducts({ product }) {
                     price: item.price,
                     category: item.category,
                     color: getCardColor(item),
+                    image:
+                      item.image ||
+                      item.images?.[0] ||
+                      "",
                   }}
                 />
               </motion.div>

@@ -10095,3 +10095,297 @@ a[aria-disabled="true"] {
   cursor: not-allowed;
   opacity: 0.6;
 }
+
+.vega-checkout-payment-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.vega-checkout-payment-option {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 18px 20px;
+  border: 1px solid rgba(28, 27, 34, 0.14);
+  border-radius: 16px;
+  background: #fff;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.vega-checkout-payment-option:hover {
+  border-color: var(--vega-ink);
+  transform: translateY(-1px);
+}
+
+.vega-checkout-payment-option input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.vega-checkout-payment-option__radio {
+  position: relative;
+  flex: 0 0 18px;
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid rgba(28, 27, 34, 0.45);
+  border-radius: 50%;
+}
+
+.vega-checkout-payment-option__radio::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--vega-ink);
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform 0.2s ease;
+}
+
+.vega-checkout-payment-option:has(input:checked) {
+  border-color: var(--vega-ink);
+  background: rgba(255, 246, 234, 0.55);
+}
+
+.vega-checkout-payment-option:has(input:checked)
+  .vega-checkout-payment-option__radio {
+  border-color: var(--vega-ink);
+}
+
+.vega-checkout-payment-option:has(input:checked)
+  .vega-checkout-payment-option__radio::after {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.vega-checkout-payment-option__content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.vega-checkout-payment-option__content strong {
+  font-size: 0.88rem;
+  letter-spacing: 0.04em;
+}
+
+.vega-checkout-payment-option__content small {
+  color: rgba(28, 27, 34, 0.62);
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
+@media (max-width: 640px) {
+  .vega-checkout-payment-option {
+    padding: 16px;
+  }
+}
+
+.vega-checkout-payment-continue {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 18px;
+  padding: 16px 20px;
+  border: 0;
+  border-radius: 14px;
+  background: var(--vega-ink);
+  color: var(--vega-cream);
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.vega-checkout-payment-continue:hover {
+  transform: translateY(-2px);
+}
+
+.vega-checkout-payment-continue span {
+  font-size: 1.1rem;
+}
+
+.vega-checkout-progress {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  margin-bottom: 40px;
+  padding: 16px 0;
+  border-bottom: 1px solid rgba(28, 27, 34, 0.1);
+}
+
+.vega-checkout-progress span {
+  color: rgba(28, 27, 34, 0.4);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  transition: color 0.2s ease;
+}
+
+.vega-checkout-progress span.active {
+  color: var(--vega-ink);
+}
+
+@media (max-width: 640px) {
+  .vega-checkout-progress {
+    gap: 16px;
+  }
+
+  .vega-checkout-progress span {
+    font-size: 0.65rem;
+  }
+}
+
+/* =========================================
+   VEGA STRADO — REVIEWS
+   Step 23: Final Review Testing & Polish
+   ========================================= */
+
+.vega-reviews {
+  margin-top: 80px;
+  padding: 64px 0;
+}
+
+.vega-reviews__breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 24px;
+  width: min(100%, 520px);
+}
+
+.vega-reviews__rating-row {
+  display: grid;
+  grid-template-columns: 42px 1fr 42px;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+}
+
+.vega-reviews__rating-bar {
+  height: 7px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(28, 27, 34, 0.1);
+}
+
+.vega-reviews__rating-bar span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--vega-coral);
+  transition: width 0.3s ease;
+}
+
+.vega-reviews__actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 28px;
+}
+
+.vega-reviews__success,
+.vega-reviews__error,
+.vega-reviews__state {
+  margin-top: 18px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  font-size: 14px;
+}
+
+.vega-reviews__success {
+  background: rgba(75, 180, 110, 0.12);
+}
+
+.vega-reviews__error {
+  background: rgba(255, 107, 74, 0.12);
+}
+
+.vega-reviews__state {
+  background: rgba(28, 27, 34, 0.05);
+}
+
+.vega-review-form {
+  display: grid;
+  gap: 16px;
+  margin-top: 28px;
+  padding: 24px;
+  border: 1px solid rgba(28, 27, 34, 0.12);
+  border-radius: 20px;
+  background: var(--vega-cream);
+}
+
+.vega-review-form input,
+.vega-review-form textarea,
+.vega-review-form select {
+  width: 100%;
+  border: 1px solid rgba(28, 27, 34, 0.16);
+  border-radius: 12px;
+  padding: 13px 14px;
+  background: #fff;
+  color: var(--vega-ink);
+  font: inherit;
+  outline: none;
+}
+
+.vega-review-form textarea {
+  min-height: 130px;
+  resize: vertical;
+}
+
+.vega-review-form input:focus,
+.vega-review-form textarea:focus,
+.vega-review-form select:focus {
+  border-color: var(--vega-coral);
+}
+
+.vega-review-card {
+  position: relative;
+}
+
+.vega-review-card__verification {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+@media (max-width: 700px) {
+  .vega-reviews {
+    margin-top: 56px;
+    padding: 44px 0;
+  }
+
+  .vega-reviews__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .vega-review-form {
+    padding: 18px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vega-reviews__rating-bar span {
+    transition: none;
+  }
+}
